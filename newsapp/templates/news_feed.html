@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vishwa Patrika</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/news-logo.png">
+    <link rel="stylesheet" href="/static/news_feed.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Vishwa Patrika</h1>
+        <form method="GET" action="{% url 'news_feed' %}" class="search-form">
+            <input type="text" name="source" class="search-bar" placeholder="Search by news source..." value="{{ request.GET.source }}">
+        </form>
+    </div>
+    
+    <div class="filter-section">
+        <ul>
+            <li class="filter-chip {% if not request.GET.category %}active{% endif %}">
+                <a href="{% url 'news_feed' %}">All</a>
+            </li>
+            <li class="filter-chip {% if request.GET.category == 'technology' %}active{% endif %}">
+                <a href="?category=technology">Technology</a>
+            </li>
+            <li class="filter-chip {% if request.GET.category == 'sports' %}active{% endif %}">
+                <a href="?category=sports">Sports</a>
+            </li>
+            <li class="filter-chip {% if request.GET.category == 'entertainment' %}active{% endif %}">
+                <a href="?category=entertainment">Entertainment</a>
+            </li>
+            <li class="filter-chip {% if request.GET.category == 'science' %}active{% endif %}">
+                <a href="?category=science">Science</a>
+            </li>
+            <li class="filter-chip {% if request.GET.category == 'business' %}active{% endif %}">
+                <a href="?category=business">Business</a>
+            </li>
+            <li class="filter-chip {% if request.GET.category == 'health' %}active{% endif %}">
+                <a href="?category=health">Health</a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="container">
+        <h1>Latest News {% if request.GET.category %}in {{ request.GET.category|title }}{% endif %}</h1>
+        
+        <div class="articles-section">
+            {% if articles %}
+                {% for article in articles %}
+                    {% if article.url_to_image %}
+                        <a href="{{ article.url }}" target="_blank" class="article-link">
+                            <div class="article">
+                                <div class="image-container">
+                                    <img src="{{ article.url_to_image }}" alt="News Image">
+                                </div>
+                                <p>{{ article.source.name }}</p>
+                                <h2>{{ article.title }}</h2>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="no-articles">
+                    <h3>No articles found</h3>
+                    <p>Try adjusting your search or category filters</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
